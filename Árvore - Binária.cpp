@@ -13,6 +13,45 @@ struct ar{
 	ar *cima;
 };
 
+int profAA=0;
+int profPP=0;
+int profTT=0;
+
+
+
+
+int profundidade (ar * atual) {
+	ar *temp;
+	ar *temp1;
+	
+	while((*atual)->cima != NULL){
+		*atual = (*atual)->cima;
+	}
+	
+  	if (atual == NULL) {
+   		profTT=0;
+	}
+   	
+	  else {
+   	  temp= atual->aa;
+   	  temp1= atual->pp;
+      int profAA = profundidade(temp);
+      int profPP = profundidade(temp1);
+      if (profAA < profPP) {
+      	  profTT+=profPP++;
+	  }else {
+	  	  profTT+=profAA++;
+	  }
+	   // profTT = profPP + profAA;
+	   
+  	 }
+   	
+		 //profTT = profPP + profAA;
+
+  
+}
+
+
 void inserirNull(ar **atual){
 	ar *novo;
 	int val;
@@ -294,7 +333,9 @@ int main(){
 			}
 				
 		}else if(op == 6){
-		
+			profundidade(atual);
+			printf("\nA profundidade da árvore é de %i\n",profTT);
+			system("pause");
 			
 		}else if(op == 7){
 			
