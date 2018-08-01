@@ -15,41 +15,133 @@ struct ar{
 
 int profAA=0;
 int profPP=0;
-int profTT=0;
+int profTT;
+int exec=0;
 
 
+void preOrdem(ar * atual){
+	system("cls");
+	printf("\nExecuÁ„o na prÈ ordem\n 1 - Anterior\n 2 - PrÛximo\n 3 - Sair");
+	
+}
 
 
 int profundidade (ar * atual) {
 	ar *temp;
-	ar *temp1;
-	
-	while((*atual)->cima != NULL){
-		*atual = (*atual)->cima;
-	}
-	
-  	if (atual == NULL) {
-   		profTT=0;
-	}
-   	
-	  else {
-   	  temp= atual->aa;
-   	  temp1= atual->pp;
-      int profAA = profundidade(temp);
-      int profPP = profundidade(temp1);
-      if (profAA < profPP) {
-      	  profTT+=profPP++;
-	  }else {
-	  	  profTT+=profAA++;
-	  }
-	   // profTT = profPP + profAA;
-	   
-  	 }
-   	
-		 //profTT = profPP + profAA;
+	ar *esq = NULL;
+	ar *dir = NULL;
+	temp = atual;
+	int caa=0;
+	int cpp=0;
 
-  
+	if(exec==0){
+		if(atual->aa !=NULL){
+		atual = atual->aa;
+		while(atual->aa !=NULL){
+			atual = atual->aa;
+			caa++;
+		}
+		esq = atual;
+		atual = temp;
+		atual = atual->aa;
+		
+		while(atual->pp !=NULL){
+			atual = atual->pp;
+			cpp++;
+		}
+		dir = atual;
+		atual = temp;
+
+		if(cpp>caa){
+			while(dir->cima !=NULL){
+			dir = dir->cima;
+				profAA++;
+			}
+
+		}else if(cpp<caa){
+			while(esq->cima !=NULL){
+			esq = esq->cima;
+				profAA++;
+			}
+		
+		
+		}else{
+			while(esq->cima !=NULL){
+			esq = esq->cima;
+				profAA++;
+			}
+		}
+		caa=0;
+		cpp=0;
+		exec++;
+		profundidade(temp);
+		}else{
+			exec++;
+			profundidade(temp);
+		}
+		return 0;
+	}else if(exec==1){
+		if(atual->pp !=NULL){
+		atual = atual->pp;
+		while(atual->aa !=NULL){
+			atual = atual->aa;
+			caa++;
+		}
+		esq = atual;
+		atual = temp;
+		atual = atual->pp;
+		
+		while(atual->pp !=NULL){
+			atual = atual->pp;
+			cpp++;
+		}
+		dir = atual;
+		atual = temp;
+
+		if(cpp>caa){
+			while(dir->cima !=NULL){
+			dir = dir->cima;
+				profPP++;
+			}
+
+		}else if(cpp<caa){
+			while(esq->cima !=NULL){
+			esq = esq->cima;
+				profPP++;
+			}
+		
+		
+		}else{
+			while(esq->cima !=NULL){
+			esq = esq->cima;
+				profPP++;
+			}
+		}
+		caa=0;
+		cpp=0;
+		exec++;
+		profundidade(temp);
+		}else{
+			exec++;
+			profundidade(temp);
+		}
+		return 0;
+	}else if(exec==2){
+		if(profPP>profAA){
+			profTT = profPP;
+		}else if(profPP<profAA){
+			profTT = profAA;
+		}else if(profPP==profAA){
+			profTT = profAA;
+		}
+		return 0;
+	}
+	
+
+ 
 }
+  
+
 
 
 void inserirNull(ar **atual){
@@ -258,6 +350,7 @@ int main(){
 	
 	
 	
+	
 	int i = 0;
 	int op;
 	
@@ -333,8 +426,27 @@ int main(){
 			}
 				
 		}else if(op == 6){
-			profundidade(atual);
-			printf("\nA profundidade da ·rvore È de %i\n",profTT);
+			exec=0;
+			profAA=0;
+			profPP=0;
+			
+			if(tamanho!=0){
+				while(atual->cima != NULL){
+					atual = atual->cima;
+					
+				}
+				
+				if(atual->cima == NULL){
+					profundidade(atual);
+					printf("\nA profundidade da ·rvore È de %i\n",profTT);
+					profTT=0;
+				}
+				
+			}else if(tamanho == 0){
+					printf("\n¡rvore vazia\n");
+			}
+		
+			
 			system("pause");
 			
 		}else if(op == 7){
