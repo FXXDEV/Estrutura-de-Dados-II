@@ -4,7 +4,7 @@
 #include <windows.h>
 #include <locale.h>
 
-int tamanho=0;
+
 
 struct ar{
 	int valor;
@@ -13,17 +13,62 @@ struct ar{
 	ar *cima;
 };
 
+int tamanho=0;
 int profAA=0;
 int profPP=0;
 int profTT;
 int exec=0;
+int execP=0;
+int cont=0;
+int vet[50];
 
 
-void preOrdem(ar * atual){
-	system("cls");
-	printf("\nExecução na pré ordem\n 1 - Anterior\n 2 - Próximo\n 3 - Sair");
+int preOrdem(ar * atual){
+	ar * temp;
+	temp = atual;
+	int tag =1;
+
+	if(execP==0 || tag==0){
+		if(atual->aa!=NULL){
+			vet[cont] = atual->valor;
+			atual = atual->aa;
+			while(atual->aa !=NULL){
+				cont++;
+				vet[cont] = atual->valor;
+				atual = atual->aa;
+			
+			}
+			atual = temp;
+			atual = atual->aa;
+			while(atual->pp !=NULL){
+				cont++;
+				vet[cont] = atual->valor;
+				atual = atual->pp;
+			}
+			execP++;
+			
+			
+		}
+		return 0;
+	}
+		
+		if(execP==1){
+			tag = 0;
+			atual = temp;
+			atual = atual->pp;
+			preOrdem(atual);
+			return 0;
+	}
+		
+
+	
+	
+	
+	
+	
 	
 }
+
 
 
 int profundidade (ar * atual) {
@@ -450,6 +495,30 @@ int main(){
 			system("pause");
 			
 		}else if(op == 7){
+			execP=0;
+			cont=0;
+			
+			if(tamanho!=0){
+				while(atual->cima != NULL){
+					atual = atual->cima;
+					
+				}
+				
+				if(atual->cima == NULL){
+					preOrdem(atual);
+					printf("Valores na pré ordem\n");
+					for(int i=0;i<5;i++){
+						printf("[%i] ",vet[i]);
+				
+					};
+					printf("\n");
+				}
+				
+				}else if(tamanho == 0){
+					printf("\nÁrvore vazia\n");
+				}
+		
+			system("pause");
 			
 		}else if(op == 8){
 			
