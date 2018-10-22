@@ -4,8 +4,6 @@
 #include <windows.h>
 #include <locale.h>
 
-
-
 struct ar{
 	int valor;
 	ar *pp;
@@ -21,174 +19,147 @@ int exec=0;
 int execP=0;
 int cont=0;
 int vet[50];
+int tag = 1;
+int count = 0; 
+bool profTTeste = false;
 
-
-int preOrdem(ar * atual){
-	ar * temp;
-	temp = atual;
-	int tag =1;
-
-	if(execP==0 || tag==0){
-		if(atual->aa!=NULL){
-			vet[cont] = atual->valor;
-			atual = atual->aa;
-			while(atual->aa !=NULL){
-				cont++;
-				vet[cont] = atual->valor;
-				atual = atual->aa;
-			
-			}
-			atual = temp;
-			atual = atual->aa;
-			while(atual->pp !=NULL){
-				cont++;
-				vet[cont] = atual->valor;
-				atual = atual->pp;
-			}
-			execP++;
-			
-			
+void percorre_dir(ar *atual){//percorrer direita
+	ar *aux;
+	aux = atual;
+	if(aux != NULL){
+		count++;
+		if(profTTeste == false){
+			printf("%i ", aux->valor);
 		}
-		return 0;
+		percorre_dir(aux->aa);
+	} 
+	if(count > profTT){
+		profTT = count;
 	}
-		
-		if(execP==1){
-			tag = 0;
-			atual = temp;
-			atual = atual->pp;
-			preOrdem(atual);
-			return 0;
-	}
-		
+	aux = atual;
+	if(aux !=NULL){
+		percorre_dir(aux->pp);
+		count--;
+	} 
+}
 
+void percorre_esq(ar *atual){//percorrer esquerda
+	ar *aux;
+	aux = atual;
+	if(aux != NULL){
+		percorre_esq(aux->aa);
+		printf("%i ", aux->valor);
+	} 
+	aux = atual;
+	if(aux !=NULL){
+		percorre_esq(aux->pp);
+	} 
+}
+
+
+ar* visitar_raiz(ar *atual){
+	ar *aux;
+	ar *raiz;
+
+	raiz = atual;
 	
+	while(raiz->cima != NULL){
+		raiz = raiz->cima;
+	}
 	
-	
-	
-	
-	
+	return raiz;
 }
 
 
 
-int profundidade (ar * atual) {
+int profundidade(ar *atual){
+	profTT = 0;
+	profTTeste = true;
+	
+	if(tamanho == 0){
+		profTTeste = false;
+		return profTT;
+	} else {
+		ar *aux;
+	
+		aux = visitar_raiz(atual);
+		count = 0;
+		
+		percorre_dir(aux->aa); // Percorrer Esquerda
+		percorre_dir(aux->pp); // Percorrer Direita
+	
+		profTTeste = false;
+		return profTT;
+	}
+}
+
+
+int altura(ar* atual){
+	 if (atual == NULL) {
+       return 0;
+   	 } else {
+   	
+   		int profAA = altura(atual->aa);
+   		int profPP = altura(atual->pp);
+   		
+   		if (profAA > profPP) {
+   			return 1 + profAA;
+		} else {
+			return 1 + profPP;
+		}
+   }
+}
+
+int desbalanceado(ar** atual) {
+	ar * aux;
+	aux = *atual;
+
+	if (atual == NULL) {
+		return 0;
+	} else {
+		return ( altura(aux->pp) - altura(aux->aa));
+	}
+}
+
+
+int preOrdem(ar *atual){
 	ar *temp;
-	ar *esq = NULL;
-	ar *dir = NULL;
-	temp = atual;
-	int caa=0;
-	int cpp=0;
+	temp=atual;
+    if(temp != NULL){
+    	vet[cont]=temp->valor;
+    	cont++;
+        preOrdem(atual->aa);
+        preOrdem(atual->pp);
+    }
+    return 0;
+}
 
-	if(exec==0){
-		if(atual->aa !=NULL){
-		atual = atual->aa;
-		while(atual->aa !=NULL){
-			atual = atual->aa;
-			caa++;
-		}
-		esq = atual;
-		atual = temp;
-		atual = atual->aa;
-		
-		while(atual->pp !=NULL){
-			atual = atual->pp;
-			cpp++;
-		}
-		dir = atual;
-		atual = temp;
+int posOrdem(ar *atual){
+	ar *temp;
+	temp=atual;
+	
+	if(temp != NULL){
+        posOrdem(atual->aa);
+        posOrdem(atual->pp);
+        vet[cont]=temp->valor;
+    	cont++;
+    }
+	return 0;
+}
 
-		if(cpp>caa){
-			while(dir->cima !=NULL){
-			dir = dir->cima;
-				profAA++;
-			}
-
-		}else if(cpp<caa){
-			while(esq->cima !=NULL){
-			esq = esq->cima;
-				profAA++;
-			}
-		
-		
-		}else{
-			while(esq->cima !=NULL){
-			esq = esq->cima;
-				profAA++;
-			}
-		}
-		caa=0;
-		cpp=0;
-		exec++;
-		profundidade(temp);
-		}else{
-			exec++;
-			profundidade(temp);
-		}
-		return 0;
-	}else if(exec==1){
-		if(atual->pp !=NULL){
-		atual = atual->pp;
-		while(atual->aa !=NULL){
-			atual = atual->aa;
-			caa++;
-		}
-		esq = atual;
-		atual = temp;
-		atual = atual->pp;
-		
-		while(atual->pp !=NULL){
-			atual = atual->pp;
-			cpp++;
-		}
-		dir = atual;
-		atual = temp;
-
-		if(cpp>caa){
-			while(dir->cima !=NULL){
-			dir = dir->cima;
-				profPP++;
-			}
-
-		}else if(cpp<caa){
-			while(esq->cima !=NULL){
-			esq = esq->cima;
-				profPP++;
-			}
-		
-		
-		}else{
-			while(esq->cima !=NULL){
-			esq = esq->cima;
-				profPP++;
-			}
-		}
-		caa=0;
-		cpp=0;
-		exec++;
-		profundidade(temp);
-		}else{
-			exec++;
-			profundidade(temp);
-		}
-		return 0;
-	}else if(exec==2){
-		if(profPP>profAA){
-			profTT = profPP;
-		}else if(profPP<profAA){
-			profTT = profAA;
-		}else if(profPP==profAA){
-			profTT = profAA;
-		}
-		return 0;
+int emOrdem(ar *atual){
+	ar *temp;
+	temp=atual;
+	if(temp!=NULL){
+		emOrdem(temp->aa);
+		vet[cont] = temp->valor;
+		cont++;
+		emOrdem(temp->pp);
 	}
 	
-
- 
 }
+ 
   
-
-
-
 void inserirNull(ar **atual){
 	ar *novo;
 	int val;
@@ -254,8 +225,6 @@ int inserir(ar **atual){
 	printf("\nValor inserido!\n\n");
 	system("pause");
 }
-
-
 
 void removeFolha(ar **atual){
 	ar *aux;
@@ -405,7 +374,7 @@ int main(){
 		setlocale(LC_ALL,"Portuguese");
 		printf("Estrutura de Dados - Árvore B\n");
 		
-		printf("\n1 - Inserir\n2 - Remover\n3 - Valor Acima\n4 - Esquerda\n5 - Direita\n6 - Profundidade\n7 - Pré- Ordem\n8 - Pós-Ordem\n9 - Ordem\n0 - Sair \n\n");
+		printf("\n1 - Inserir\n2 - Remover\n3 - Valor Acima\n4 - Esquerda\n5 - Direita\n6 - Profundidade\n7 - Pré- Ordem\n8 - Pós-Ordem\n9 - Em Ordem\n10 - Desbalanceamento \n0 - Sair \n\n");
 		
 
 		if(tamanho==0){
@@ -495,8 +464,8 @@ int main(){
 			system("pause");
 			
 		}else if(op == 7){
-			execP=0;
 			cont=0;
+			
 			
 			if(tamanho!=0){
 				while(atual->cima != NULL){
@@ -507,7 +476,7 @@ int main(){
 				if(atual->cima == NULL){
 					preOrdem(atual);
 					printf("Valores na pré ordem\n");
-					for(int i=0;i<5;i++){
+					for(int i=0;i<cont;i++){
 						printf("[%i] ",vet[i]);
 				
 					};
@@ -521,9 +490,72 @@ int main(){
 			system("pause");
 			
 		}else if(op == 8){
+			cont=0;
+			
+			
+			if(tamanho!=0){
+				while(atual->cima != NULL){
+					atual = atual->cima;
+					
+				}
+				
+				if(atual->cima == NULL){
+					posOrdem(atual);
+					printf("Valores na pós ordem\n");
+					for(int i=0;i<cont;i++){
+						printf("[%i] ",vet[i]);
+				
+					};
+					printf("\n");
+				}
+				
+				}else if(tamanho == 0){
+					printf("\nÁrvore vazia\n");
+				}
+		
+			system("pause");
 			
 		}else if(op == 9){
+			cont=0;
 			
+			
+			if(tamanho!=0){
+				while(atual->cima != NULL){
+					atual = atual->cima;
+					
+				}
+				
+				if(atual->cima == NULL){
+				
+					emOrdem(atual);
+					printf("Valores na pós ordem\n");
+					for(int i=0;i<cont;i++){
+						printf("[%i] ",vet[i]);
+				
+					};
+					printf("\n");
+				}
+				
+				}else if(tamanho == 0){
+					printf("\nÁrvore vazia\n");
+				}
+		
+			system("pause");
+			
+		}else if(op==10){
+				if(tamanho!=0){
+				while(atual->cima != NULL){
+					atual = atual->cima;
+					
+				}
+			printf("\nElemento desbalanceado por:%i unidades\n", desbalanceado(&atual));	
+			}else{
+				printf("\nInsira elementos");
+			}
+			
+			system("pause");
+			
+		
 		}else if(op == 0){
 			printf("\nFinalizando");
 			for(i=0;i<3;i++){
